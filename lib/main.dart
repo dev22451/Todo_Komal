@@ -30,7 +30,7 @@ class _TodoappState extends State<Todoapp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("TodoApp"),
+        title: Text("Todo App"),
       ),
     );
   }
