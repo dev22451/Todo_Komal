@@ -1,13 +1,15 @@
+// ignore_for_file: non_constant_identifier_names, avoid_types_as_parameter_names
+
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
 import 'controler.dart';
 import 'second.dart';
 import 'date.dart';
+import 'login.dart';
 
-//import 'package:get/get.dart';
-//import 'controler.dart';
-
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(Todo());
 }
 
@@ -16,87 +18,98 @@ void main() {
 //   final bool checked;
 
 //   TodoItem({required this.checked, required this.name});
+// }
 
 class Todo extends StatelessWidget {
+  const Todo({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: TodoList(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
+      home: const LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class TodoList extends StatefulWidget {
+  const TodoList({Key? key}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _TodoListState createState() => _TodoListState();
 }
 
 class _TodoListState extends State<TodoList> {
   final todoController countController = Get.put(todoController());
-  // final List<String> _todoList = <String>[];
-  bool isChecked = false;
-  // final TextEditingController _textFieldController = TextEditingController();
+  late List<bool> _isChecked;
+  final registerdata = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('To-Do List'),
         backgroundColor: Colors.teal,
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+              color: Colors.white,
+              iconSize: 22,
+              onPressed: () {
+                registerdata.remove("name");
+                registerdata.remove("password");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const LoginPage(),
+                    ));
+              },
+              icon: const Icon(Icons.logout)),
+        ],
       ),
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       body: ListView(children: _getItems()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _awaitReturnValueFromSecondScreen(context);
         },
         tooltip: 'Add Item',
-        child: Icon(Icons.add),
         backgroundColor: Colors.teal,
+        child: const Icon(Icons.add),
       ),
     );
   }
 
   void _addTodoItem(String title) {
     countController.textAdd(title);
-
+    _isChecked = List<bool>.filled(countController.getList().length, false);
     countController.textFieldController.clear();
   }
 
   Widget _buildTodoItem(String title) {
+    int index = countController.todoList.indexOf(title);
+
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       child: ListTile(
         onTap: () {},
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         tileColor: Colors.teal,
         leading: Checkbox(
-          value: isChecked,
+          value: _isChecked[index],
           activeColor: Colors.white,
           checkColor: Colors.black,
           onChanged: (Value) {
             setState(() {
-              isChecked = Value!;
-              //int index = countController.todoList.indexOf(title);
-
-              //countController.todoList[index];
-              // print(index);
-              if (Value) {
-                isChecked = true;
-              } else {
-                print('unchacked true');
-              }
+              _isChecked[index] = Value!;
             });
           },
         ),
         title: Text(
           title,
-          style: TextStyle(
-              fontSize: 20,
-              fontStyle: FontStyle.normal,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              decoration: TextDecoration.none),
+          style: _chekedStyle(_isChecked[index]),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
@@ -105,11 +118,9 @@ class _TodoListState extends State<TodoList> {
               color: Colors.white,
               iconSize: 22,
               onPressed: () {
-                //Navigator.of(context)
                 Get.to(() => const HomePage());
-                //.push(MaterialPageRoute(builder: (context) => HomePage()));
               },
-              icon: Icon(Icons.date_range),
+              icon: const Icon(Icons.date_range),
             ),
             IconButton(
                 color: Colors.white,
@@ -127,24 +138,6 @@ class _TodoListState extends State<TodoList> {
                 icon: const Icon(Icons.delete)),
           ],
         ),
-        // trailing: Container(
-        //   padding: EdgeInsets.all(0),
-        //   margin: EdgeInsets.symmetric(vertical: 12),
-        //   height: 35,
-        //   width: 35,
-        //   decoration: BoxDecoration(
-        //       color: Colors.white, borderRadius: BorderRadius.circular(5)),
-        //   child: IconButton(
-        //     color: Colors.red,
-        //     iconSize: 18,
-        //     icon: Icon(Icons.delete),
-        //     onPressed: () {
-        //       setState(() {
-        //         countController.todoList.remove(title);
-        //       });
-        //     },
-        //   ),
-        // ),
       ),
     );
   }
@@ -158,16 +151,29 @@ class _TodoListState extends State<TodoList> {
   }
 
   void _awaitReturnValueFromSecondScreen(BuildContext context) async {
-    // start the SecondScreen and wait for it to finish with a result
     final result = await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SecondRoute(),
+          builder: (context) => const SecondRoute(),
         ));
 
-    // after the SecondScreen result comes back update the Text widget with it
     setState(() {
       _addTodoItem(result);
     });
   }
+}
+
+_chekedStyle(isChecked) {
+  if (!isChecked) {
+    return const TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontStyle: FontStyle.normal);
+  }
+  return const TextStyle(
+      color: Colors.black,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+      fontStyle: FontStyle.normal);
 }

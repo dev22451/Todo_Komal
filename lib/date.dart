@@ -1,6 +1,10 @@
+// ignore_for_file: unused_import
+
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
 import 'controler.dart';
+import 'second.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -10,61 +14,51 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  final startdate = GetStorage();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Date&Time"),
+        title: const Text("Date&Time"),
         backgroundColor: Colors.teal,
       ),
-      body: Row(
+      body: Column(
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.star,
-              size: 30,
-              color: Colors.teal,
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(top: 30),
+            // ignore: prefer_const_constructors
+            child: Text(
+              "Start date",
+              // ignore: prefer_const_constructors
+              style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal),
             ),
-            onPressed: () {
-              Get.back();
-            },
           ),
           Text(
-            "go back",
-            style: TextStyle(
-                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.teal),
+            "${startdate.read('Date')}",
+            style: const TextStyle(fontSize: 20),
           ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 18),
-                primary: Colors.teal,
-              ),
-              onPressed: () {
-                Get.snackbar('GetX Snackbar', 'Yay! Awesome GetX Snackbar',
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.teal);
-              },
-              child: const Text('Show Snackbar',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white))),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(top: 30),
+            child: const Text(
+              "End date",
+              style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal),
+            ),
+          ),
+          Text(
+            "${startdate.read('Date')}",
+            style: const TextStyle(fontSize: 20),
+          )
         ],
       ),
-
-//       body: Container(
-//           child: IconButton(
-//         icon: Icon(
-//           Icons.star,
-//         ),
-
-//         onPressed: () {
-//           Get.back();
-//         },
-
-//       ),
-
-// ),
     );
   }
 }
