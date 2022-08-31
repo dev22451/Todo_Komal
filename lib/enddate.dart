@@ -6,14 +6,14 @@ import 'package:get/get.dart';
 import 'controler.dart';
 import 'second.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Enddate extends StatefulWidget {
+  const Enddate({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => HomePageState();
+  State<Enddate> createState() => EnddateState();
 }
 
-class HomePageState extends State<HomePage> {
+class EnddateState extends State<Enddate> {
   final todoController countController = Get.put(todoController());
 
   @override
@@ -25,12 +25,12 @@ class HomePageState extends State<HomePage> {
       ),
       body: Obx(
         () => ListView(
-          children: countController.dateList.map((value) {
+          children: countController.endList.map((value) {
             return Row(
               children: <Widget>[
                 const Padding(padding: EdgeInsets.all(20)),
                 const Text(
-                  "START DATE :",
+                  "END DATE :",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,

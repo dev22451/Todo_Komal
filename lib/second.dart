@@ -3,6 +3,7 @@ import 'main.dart';
 import 'package:flutter/material.dart';
 import 'controler.dart';
 import 'package:get/get.dart';
+// ignore: unused_import
 import 'package:get_storage/get_storage.dart';
 
 class SecondRoute extends StatefulWidget {
@@ -14,7 +15,7 @@ class SecondRoute extends StatefulWidget {
 
 class _SecondRouteState extends State<SecondRoute> {
   final todoController countController = Get.put(todoController());
-  final startdate = GetStorage();
+  //final startdate = GetStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +45,10 @@ class _SecondRouteState extends State<SecondRoute> {
           child: const Text("add"),
           onPressed: () {
             String datetime = DateTime.now().toString();
+            dateAdd(datetime);
             // ignore: avoid_print
-            print(datetime);
-            startdate.write("Date", datetime);
+            //print(datetime);
+            // startdate.write("Date", datetime);
             //Text('$datetime'); //2022
             _sendDataBack(context);
           }),
@@ -55,5 +57,9 @@ class _SecondRouteState extends State<SecondRoute> {
 
   void _sendDataBack(BuildContext context) {
     Navigator.pop(context, countController.textFieldController.text);
+  }
+
+  void dateAdd(String datetime) {
+    countController.dateadd(datetime);
   }
 }

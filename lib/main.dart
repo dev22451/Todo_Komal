@@ -7,10 +7,11 @@ import 'controler.dart';
 import 'second.dart';
 import 'date.dart';
 import 'login.dart';
+import 'enddate.dart';
 
 void main() async {
   await GetStorage.init();
-  runApp(Todo());
+  runApp(const Todo());
 }
 
 // class TodoItem {
@@ -46,6 +47,7 @@ class _TodoListState extends State<TodoList> {
   final todoController countController = Get.put(todoController());
   late List<bool> _isChecked;
   final registerdata = GetStorage();
+//final enddate = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,6 +56,22 @@ class _TodoListState extends State<TodoList> {
         backgroundColor: Colors.teal,
         automaticallyImplyLeading: false,
         actions: [
+          IconButton(
+            color: Colors.white,
+            iconSize: 22,
+            onPressed: () {
+              Get.to(() => const HomePage());
+            },
+            icon: const Icon(Icons.date_range),
+          ),
+          IconButton(
+            color: Colors.white,
+            iconSize: 22,
+            onPressed: () {
+              Get.to(() => const Enddate());
+            },
+            icon: const Icon(Icons.delete_outline_outlined),
+          ),
           IconButton(
               color: Colors.white,
               iconSize: 22,
@@ -115,14 +133,6 @@ class _TodoListState extends State<TodoList> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              color: Colors.white,
-              iconSize: 22,
-              onPressed: () {
-                Get.to(() => const HomePage());
-              },
-              icon: const Icon(Icons.date_range),
-            ),
-            IconButton(
                 color: Colors.white,
                 iconSize: 22,
                 onPressed: () {},
@@ -131,6 +141,12 @@ class _TodoListState extends State<TodoList> {
                 color: Colors.white,
                 iconSize: 22,
                 onPressed: () {
+                  String datetime = DateTime.now().toString();
+                  enddate(datetime);
+
+                  // ignore: avoid_print
+                  // print(datetime);
+                  // enddate.write("EndDate", datetime);
                   setState(() {
                     countController.todoList.remove(title);
                   });
@@ -160,6 +176,10 @@ class _TodoListState extends State<TodoList> {
     setState(() {
       _addTodoItem(result);
     });
+  }
+
+  void enddate(String datetime) {
+    countController.enddate(datetime);
   }
 }
 

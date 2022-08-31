@@ -59,6 +59,8 @@ class _RegisterpageState extends State<Registerpage> {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
+                // keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';

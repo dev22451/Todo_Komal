@@ -67,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               padding: const EdgeInsets.all(10),
               child: TextFormField(
+                textCapitalization: TextCapitalization.characters,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter some text';
